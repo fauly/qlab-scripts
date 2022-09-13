@@ -1,12 +1,11 @@
-set seekFlag to display dialog "What text to seek for?" default answer "" with icon note buttons {"Cancel", "Continue"} default button "Continue"
-set toArm to display dialog "What would you like to do?" buttons {"Arm","Disarm"} default button "Arm"
+set search to display dialog "What text to seek for?" default answer "" with icon note buttons {"Arm", "Disarm"} default button "Arm"
+set shouldArm to button returned of search
+set seekFlag to text returned of search
 
-set shouldArm to false
-
-if toArm equals "Arm" then
-set shouldArm to true
+if shouldArm is equal to "Arm" then
+	set arming to true
 else
-set shouldArm to false
+	set arming to false
 end if
 
 tell application id "com.figure53.QLab.4"
@@ -20,6 +19,8 @@ tell application "System Events"
 	keystroke "a" using command down
 end tell
 
+delay 0.5
+
 set cuesChanged to 0
 
 tell application id "com.figure53.QLab.4"
@@ -27,7 +28,8 @@ tell application id "com.figure53.QLab.4"
 	repeat with eachCue in ShowCueList
 		try
 			if q name of eachCue contains seekFlag then
-				set armed of eachCue to shouldArm
+				set armed of eachCue to arming
+				set cuesChanged to cuesChanged + 1
 			end if
 		end try
 	end repeat
